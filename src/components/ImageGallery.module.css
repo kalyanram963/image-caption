@@ -1,0 +1,831 @@
+/* src/components/ImageGallery.module.css */
+
+.imageGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.imageCard {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  transition: var(--transition-medium);
+  overflow: hidden;
+}
+
+.imageCard:hover {
+  transform: translateY(-5px);
+  position: relative;
+  z-index: 1;
+}
+.imageCard:hover::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 1rem;
+  padding: 2px;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: blur(8px);
+  opacity: 0.7;
+  transition: var(--transition-medium);
+  z-index: -1;
+}
+
+
+.removeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: var(--color-card-background);
+  color: var(--color-error);
+  border: none;
+  border-radius: 50%;
+  padding: 0.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+  z-index: 2;
+}
+
+.removeButton:hover {
+  background-color: var(--color-background);
+  color: #CC0000;
+  transform: scale(1.1);
+}
+
+.removeButton:active {
+  transform: scale(0.9);
+}
+
+.imagePreviewContainer {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+.imageFileName {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.8em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  transform: translateY(100%);
+  transition: transform var(--transition-fast);
+  z-index: 1;
+}
+
+.imageCard:hover .imageFileName {
+  transform: translateY(0);
+}
+
+.captionArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.loadingState, .errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-primary);
+  gap: 0.5rem;
+}
+
+.loadingSpinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 4px solid rgba(99, 102, 241, 0.3);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  font-size: 0.95em;
+  font-weight: 500;
+  animation: pulse 1.5s infinite;
+  color: var(--color-text-secondary);
+}
+
+.errorTitle {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--color-error);
+}
+
+.errorMessage {
+  font-size: 0.85em;
+  color: var(--color-text-secondary);
+}
+
+.captionContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.captionText {
+  font-size: 1.05em;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  word-break: break-word;
+  display: block; /* Ensure it takes full height */
+}
+
+.hashtagsText {
+  font-size: 0.8em;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+  word-break: break-word;
+  text-align: center;
+  width: 100%;
+}
+
+.generateButton, .copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: white;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  transition: var(--transition-medium);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+}
+
+.generateButton:hover, .copyButton:hover {
+  background: linear-gradient(to right, var(--color-secondary), var(--color-primary));
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+.generateButton:active, .copyButton:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.copyButtonIcon {
+  margin-right: 0.5rem;
+}
+
+.copyButton.copied {
+  background: var(--color-success);
+  animation: none;
+  box-shadow: var(--shadow-md);
+  transform: none;
+}
+
+/* Unified Analysis Section for Style and Face/Emotion */
+.analysisSection {
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+  background-color: var(--color-background);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-top: 0.75rem; /* Adjusted margin-top to be consistent */
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  text-align: center;
+}
+
+.analysisLoading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-primary);
+  font-size: 0.9em;
+}
+
+.analysisError {
+  color: var(--color-error);
+  text-align: center;
+  font-size: 0.85em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.analysisError p {
+    margin: 0;
+}
+
+.analysisDisplay {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 0.9em;
+}
+
+.analysisIcon {
+  font-size: 1.1em;
+}
+
+/* NEW: Style for inline icons/emojis */
+.inlineIcon {
+    margin-right: 0.3em; /* Space between icon and text */
+    font-size: 1.1em; /* Slightly larger for visibility */
+    vertical-align: middle; /* Align with text baseline */
+}
+/* Specific styling for emoji spans */
+.inlineIcon span[role="img"] {
+    font-size: 1.2em; /* Make emojis a bit larger */
+    vertical-align: -0.15em; /* Fine-tune vertical alignment for emojis */
+}
+
+
+.loadingSpinnerSmall {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Retry Button for analysis errors */
+.retryAnalysisButton {
+    background: var(--color-primary-dark);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7em;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    margin-top: 0.25rem;
+}
+.retryAnalysisButton:hover {
+    background: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+
+/* Retry Button (for caption and translation errors) */
+.retryButton {
+    background: linear-gradient(to right, var(--color-primary-dark), var(--color-primary));
+    color: white;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8em;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    margin-top: 0.5rem;
+}
+.retryButton:hover {
+    background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+    transform: translateY(-1px);
+}
+.retryButton:disabled {
+    background: var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* Translation Action Area Styles */
+.translationActionArea {
+    background-color: var(--color-background);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-top: 0.75rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.translationLoading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-secondary);
+    font-size: 0.9em;
+}
+
+.translationError {
+    color: var(--color-error);
+    text-align: center;
+    font-size: 0.85em;
+}
+.translationError p {
+    margin: 0;
+}
+
+.translatedCaptionHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85em;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-bottom: -0.2rem;
+}
+
+.translatedCaptionLang {
+    margin: 0;
+    color: var(--color-primary);
+}
+
+.translatedCaptionText {
+    font-size: 1em;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    word-break: break-word;
+    display: block; /* Ensure it takes full height */
+}
+
+.translateIcon {
+    font-size: 1.2em;
+    color: var(--color-secondary);
+}
+
+.translateButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(to right, var(--color-secondary), var(--color-primary-light));
+    transition: var(--transition-medium);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+}
+
+.translateButton:hover {
+    background: linear-gradient(to right, var(--color-primary-light), var(--color-secondary));
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+.translateButton:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+.translateButton:disabled {
+    background: var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.translateButtonIcon {
+    margin-right: 0.5rem;
+}
+
+/* SEO Alt-text Section */
+.altTextSection {
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+    background-color: var(--color-background);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-top: 0.75rem; /* Space below previous section */
+    box-shadow: var(--shadow-sm);
+    width: 100%;
+    text-align: center;
+}
+
+.altTextLoading, .altTextError, .altTextDisplay {
+    display: flex;
+    flex-direction: column; /* Stack elements within these states */
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.altTextLoading {
+    color: var(--color-primary);
+    font-size: 0.9em;
+}
+
+.altTextError {
+    color: var(--color-error);
+    font-size: 0.85em;
+}
+.altTextError p {
+    margin: 0;
+}
+
+.altTextDisplay {
+  color: var(--color-text-primary);
+  font-size: 0.95em;
+  font-weight: 500;
+  line-height: 1.4;
+  word-break: break-word;
+  display: block; /* Changed to block to allow full height */
+  position: relative; /* For copy button positioning */
+  padding-right: 2.5rem; /* Make space for copy button */
+}
+.altTextDisplay p {
+    margin: 0;
+    flex-grow: 1; /* Allow text to take available space */
+}
+.altTextDisplay .analysisIcon { /* Use analysis icon for alt-text */
+    font-size: 1.1em;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.altTextDisplay .copyButtonSmall { /* Specific style for alt-text copy button */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-primary);
+    color: white;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7em;
+    border-radius: 0.3rem;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.altTextDisplay .copyButtonSmall:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-50%) scale(1.05);
+}
+.altTextDisplay .copyButtonSmall:active {
+    transform: translateY(-50%) scale(0.95);
+}
+.altTextDisplay .copyButtonSmall.copied {
+    background: var(--color-success);
+}
+
+
+.generateAltTextButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(to right, #20B2AA, #48D1CC); /* Custom color for alt-text button */
+    transition: var(--transition-medium);
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+}
+.generateAltTextButton:hover {
+    background: linear-gradient(to right, #48D1CC, #20B2AA);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+.generateAltTextButton:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+
+.generateAltTextButtonIcon {
+    margin-right: 0.5rem;
+}
+
+
+/* Share Buttons Container */
+.shareButtonsContainer {
+    background-color: var(--color-background);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-top: 0.75rem;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.shareTitle {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-right: 0.5rem;
+    flex-basis: 100%;
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.shareButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.85em;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+}
+
+.shareButton:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+.shareButton:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-xs);
+}
+.shareButton:disabled {
+    background-color: var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+    transform: none;
+}
+
+.shareButtonIcon {
+    margin-right: 0.5rem;
+}
+
+/* Specific button colors */
+.whatsappButton {
+    background-color: #25D366;
+}
+.whatsappButton:hover {
+    background-color: #1DA851;
+}
+
+.twitterButton {
+    background-color: #1DA1F2;
+}
+.twitterButton:hover {
+    background-color: #0F8DD7;
+}
+
+.instagramButton {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+.instagramButton:hover {
+    filter: brightness(1.1);
+}
+
+/* Snapchat Button Color (kept for reference in case it's re-added) */
+.snapchatButton {
+    background-color: #FFFC00; /* Snapchat Yellow */
+    color: #333; /* Dark text for contrast */
+}
+.snapchatButton:hover {
+    background-color: #E6E300;
+}
+
+
+/* Global Message Modal Styles */
+/* These styles are now defined in App.js's imported styles for clarity */
+.globalMessageModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+.globalMessageContent {
+    background-color: var(--color-card-background);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid var(--color-border);
+}
+
+.globalMessageHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.globalMessageHeader h2 {
+    margin: 0;
+    font-size: 1.4em;
+    color: var(--color-text-primary);
+}
+
+.globalMessageIcon { /* Renamed from .global-message-icon */
+    font-size: 3rem;
+    color: var(--color-primary);
+}
+
+.globalMessageContent p {
+    font-size: 1.1em;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.textToCopyContainer {
+    width: 90%;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.textToCopyArea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    border: none;
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95em;
+    padding: 0.25rem;
+    outline: none;
+    cursor: text;
+}
+
+.copyTextInModalButton {
+    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition-medium);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.copyTextInModalButton:hover {
+    background: linear-gradient(to right, var(--color-secondary), var(--color-primary));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.globalMessageOkButton { /* Renamed from .global-message-ok-button */
+    background: linear-gradient(to right, var(--color-success), #4ade80);
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition-medium);
+    box-shadow: var(--shadow-md);
+    margin-top: 1rem;
+}
+.globalMessageOkButton:hover {
+    background: linear-gradient(to right, #4ade80, var(--color-success));
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+.globalMessageOkButton:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Message type specific colors */
+.infoMessage .globalMessageIcon { color: var(--color-primary); } /* Renamed */
+.infoMessage .globalMessageOkButton { background: linear-gradient(to right, var(--color-primary), var(--color-secondary)); } /* Renamed */
+.infoMessage .globalMessageOkButton:hover { background: linear-gradient(to right, var(--color-secondary), var(--color-primary)); } /* Renamed */
+
+.successMessage .globalMessageIcon { color: var(--color-success); } /* Renamed */
+.successMessage .globalMessageOkButton { background: linear-gradient(to right, var(--color-success), #4ade80); } /* Renamed */
+.successMessage .globalMessageOkButton:hover { background: linear-gradient(to right, #4ade80, var(--color-success)); } /* Renamed */
+
+.errorMessage .globalMessageIcon { color: var(--color-error); } /* Renamed */
+.errorMessage .globalMessageOkButton { background: linear-gradient(to right, var(--color-error), #ef4444); } /* Renamed */
+.errorMessage .globalMessageOkButton:hover { background: linear-gradient(to right, #ef4444, var(--color-error)); } /* Renamed */
+
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .imageGallery {
+    grid-template-columns: 1fr;
+  }
+  .imageCard {
+    padding: 1rem;
+  }
+  .imagePreviewContainer {
+    height: 150px;
+  }
+  .captionText {
+    font-size: 0.95em;
+  }
+  .generateButton, .copyButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.85em;
+  }
+  .analysisSection, .translationActionArea, .altTextSection, .shareButtonsContainer {
+    padding: 0.5rem;
+    font-size: 0.8em;
+  }
+  .shareTitle {
+      font-size: 0.85em;
+  }
+  .shareButton {
+      font-size: 0.8em;
+      padding: 0.4rem 0.8rem;
+  }
+  .globalMessageContent { /* Renamed */
+      padding: 1.5rem;
+      margin: 1rem;
+  }
+  .globalMessageIcon { /* Renamed */
+      font-size: 2.5rem;
+  }
+  .globalMessageContent p {
+      font-size: 1em;
+  }
+  .globalMessageOkButton { /* Renamed */
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9em;
+  }
+}

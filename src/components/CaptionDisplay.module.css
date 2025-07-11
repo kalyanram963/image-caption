@@ -1,0 +1,173 @@
+/* src/components/CaptionDisplay.module.css */
+
+.captionDisplay {
+  position: relative;
+  width: 100%;
+  padding: 2rem; /* Increased padding */
+  background-color: var(--color-card-background);
+  border-radius: 1rem; /* More rounded corners */
+  box-shadow: var(--shadow-lg); /* Consistent shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px; /* Ensure enough height */
+  color: var(--color-text-primary);
+  text-align: center; /* Center align all content */
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-primary);
+  gap: 0.75rem;
+}
+
+.loadingSpinner {
+  width: 3.5rem; /* Larger spinner */
+  height: 3.5rem;
+  border: 5px solid rgba(99, 102, 241, 0.3);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  font-size: 1.25rem; /* Larger text */
+  font-weight: 600;
+  animation: pulse 1.5s infinite;
+}
+
+.errorState {
+  color: var(--color-error);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.errorTitle {
+  font-size: 1.5rem; /* Larger error title */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.errorMessage {
+  font-size: 1em;
+  color: var(--color-text-secondary); /* Muted error message */
+}
+
+.emoji {
+  font-size: 3rem; /* Larger emojis */
+  margin-top: 1rem;
+}
+
+.captionContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  gap: 1.5rem; /* Space between caption and button */
+}
+
+.captionText {
+  font-size: 1.35rem; /* Larger and more readable caption */
+  font-weight: 500; /* Slightly lighter weight for body text */
+  line-height: 1.6; /* Improved line height for readability */
+  color: var(--color-text-primary);
+}
+
+.hashtagsText {
+  font-size: 0.95rem; /* Smaller for hashtags */
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+  word-break: break-word; /* Ensure long hashtags wrap */
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2rem; /* Consistent button padding */
+  border-radius: 9999px;
+  color: white;
+  transition: var(--transition-medium);
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  box-shadow: var(--shadow-md);
+  font-weight: 600;
+  font-size: 1.1em;
+  border: none;
+  cursor: pointer;
+  animation: pulseButton 1.5s infinite;
+}
+
+.copyButton:hover {
+  background: linear-gradient(to right, var(--color-secondary), var(--color-primary));
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.copyButton:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.copyButton.copied {
+  background: var(--color-success);
+  animation: none;
+  box-shadow: var(--shadow-md);
+  transform: none;
+}
+
+.copyButtonIcon {
+  margin-right: 0.75rem;
+}
+
+.placeholder {
+  text-align: center;
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.placeholderIcon {
+  margin: 0 auto;
+  font-size: 5rem;
+  color: var(--color-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .captionDisplay {
+    padding: 1.5rem;
+    min-height: 150px;
+  }
+  .loadingSpinner {
+    width: 3rem;
+    height: 3rem;
+  }
+  .loadingText {
+    font-size: 1.1em;
+  }
+  .errorTitle {
+    font-size: 1.2em;
+  }
+  .captionText {
+    font-size: 1.1em;
+  }
+  .copyButton {
+    font-size: 1em;
+    padding: 0.6rem 1.5rem;
+  }
+  .emoji {
+    font-size: 2.5rem;
+  }
+  .placeholderIcon {
+    font-size: 4rem;
+  }
+}

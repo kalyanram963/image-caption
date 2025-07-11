@@ -1,0 +1,162 @@
+/* src/components/CameraCapture.module.css */
+
+.cameraContainer {
+  /* background-color, border-radius, box-shadow handled by .glass-effect */
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 75%;
+  border-radius: 0.75rem;
+  background-color: #000;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoElement {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+.noCamera {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 1.1em;
+}
+
+.cameraIconPlaceholder {
+  font-size: 4rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.95em;
+  color: white;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  transition: var(--transition-medium);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+}
+
+.controlButton:hover {
+  background: linear-gradient(to right, var(--color-secondary), var(--color-primary));
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.controlButton:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.controlButton:disabled {
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.controlButtonIcon {
+  margin-right: 0.5rem;
+}
+
+.captureConfirmation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(34, 197, 94, 0.7);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.captureConfirmation.show {
+  animation: fadeInOut 1.5s forwards;
+}
+
+.confirmationIcon {
+  font-size: 5rem;
+  color: white;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.hiddenCanvas {
+  display: none;
+}
+
+.useButton {
+    background: linear-gradient(to right, var(--color-success), #4ade80);
+}
+.useButton:hover {
+    background: linear-gradient(to right, #4ade80, var(--color-success));
+}
+
+.retakeButton {
+    background: linear-gradient(to right, var(--color-error), #f87171);
+}
+.retakeButton:hover {
+    background: linear-gradient(to right, #f87171, var(--color-error));
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .cameraContainer {
+    padding: 1rem;
+  }
+  .videoWrapper {
+    padding-top: 66.66%;
+  }
+  .controlButton {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9em;
+  }
+}
